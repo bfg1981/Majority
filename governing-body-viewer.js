@@ -106,14 +106,11 @@ function renderGoverningBody(body, container) {
   function updateCoalitionSummary() {
     const coalitionGroups = groups.filter((g) => selectedIds.has(g.id));
 
+    // Coalition totals
     if (coalitionGroups.length === 0) {
+      // Keep warning when nothing is selected
       coalitionTotalsEl.textContent = "No groups selected.";
-      rulesListEl.innerHTML = "";
-      return;
-    }
-
-    // Coalition totals for default metric
-    if (defaultMetricId && metrics[defaultMetricId]) {
+    } else if (defaultMetricId && metrics[defaultMetricId]) {
       const def = metrics[defaultMetricId];
       const totalBody =
         def.total != null ? def.total : sumMetric(groups, defaultMetricId);
@@ -124,12 +121,14 @@ function renderGoverningBody(body, container) {
       const pctText =
         pct != null ? ` (${pct.toFixed(1)}% of ${totalBody})` : "";
 
-      coalitionTotalsEl.textContent = `Coalition: ${coalitionGroups.length} groups, ${totalCoalition} ${def.unit || def.label || defaultMetricId}${pctText}`;
+      coalitionTotalsEl.textContent = `Coalition: ${coalitionGroups.length} groups, ${totalCoalition} ${
+        def.unit || def.label || defaultMetricId
+      }${pctText}`;
     } else {
       coalitionTotalsEl.textContent = `Coalition: ${coalitionGroups.length} groups.`;
     }
 
-    // Evaluate rules
+    // Always show rules, even when no groups are selected
     rulesListEl.innerHTML = "";
     if (!rules.length) {
       const li = document.createElement("li");
