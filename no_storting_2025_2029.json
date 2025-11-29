@@ -1,0 +1,181 @@
+{
+  "id": "no_storting_2025_2029",
+  "name": "Stortinget 2025–2029",
+  "kind": "parliament",
+  "version": 1,
+  "metrics": {
+    "seats": {
+      "label": "Seats",
+      "unit": "seat",
+      "kind": "discrete",
+      "total": 169,
+      "isDefault": true
+    }
+  },
+  "groups": [
+    {
+      "id": "ap",
+      "name": "Arbeiderpartiet",
+      "shortName": "Ap",
+      "kind": "party",
+      "metrics": {
+        "seats": 53
+      },
+      "metadata": {
+        "color": "#e6194b",
+        "icon": { "type": "emoji", "value": "🌹" }
+      }
+    },
+    {
+      "id": "frp",
+      "name": "Fremskrittspartiet",
+      "shortName": "FrP",
+      "kind": "party",
+      "metrics": {
+        "seats": 47
+      },
+      "metadata": {
+        "color": "#003f91",
+        "icon": { "type": "emoji", "value": "🚛" }
+      }
+    },
+    {
+      "id": "h",
+      "name": "Høyre",
+      "shortName": "H",
+      "kind": "party",
+      "metrics": {
+        "seats": 24
+      },
+      "metadata": {
+        "color": "#005aa3",
+        "icon": { "type": "emoji", "value": "🔵" }
+      }
+    },
+    {
+      "id": "sv",
+      "name": "Sosialistisk Venstreparti",
+      "shortName": "SV",
+      "kind": "party",
+      "metrics": {
+        "seats": 9
+      },
+      "metadata": {
+        "color": "#ba0c2f",
+        "icon": { "type": "emoji", "value": "✊" }
+      }
+    },
+    {
+      "id": "sp",
+      "name": "Senterpartiet",
+      "shortName": "Sp",
+      "kind": "party",
+      "metrics": {
+        "seats": 9
+      },
+      "metadata": {
+        "color": "#78be20",
+        "icon": { "type": "emoji", "value": "🌾" }
+      }
+    },
+    {
+      "id": "r",
+      "name": "Rødt",
+      "shortName": "R",
+      "kind": "party",
+      "metrics": {
+        "seats": 9
+      },
+      "metadata": {
+        "color": "#ff0000",
+        "icon": { "type": "emoji", "value": "🟥" }
+      }
+    },
+    {
+      "id": "mdg",
+      "name": "Miljøpartiet De Grønne",
+      "shortName": "MDG",
+      "kind": "party",
+      "metrics": {
+        "seats": 8
+      },
+      "metadata": {
+        "color": "#347102",
+        "icon": { "type": "emoji", "value": "🌱" }
+      }
+    },
+    {
+      "id": "krf",
+      "name": "Kristelig Folkeparti",
+      "shortName": "KrF",
+      "kind": "party",
+      "metrics": {
+        "seats": 7
+      },
+      "metadata": {
+        "color": "#ffcc33",
+        "icon": { "type": "emoji", "value": "✝️" }
+      }
+    },
+    {
+      "id": "v",
+      "name": "Venstre",
+      "shortName": "V",
+      "kind": "party",
+      "metrics": {
+        "seats": 3
+      },
+      "metadata": {
+        "color": "#00a79d",
+        "icon": { "type": "emoji", "value": "🟢" }
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "simple_majority",
+      "name": "Simple majority of seats",
+      "description": "More than 50% of seats (at least 85 of 169).",
+      "scope": "body",
+      "conditions": [
+        {
+          "type": "sum",
+          "metric": "seats",
+          "operator": ">",
+          "threshold": {
+            "kind": "fractionOfTotal",
+            "metric": "seats",
+            "value": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "absolute_majority",
+      "name": "Absolute majority (≥ 85 seats)",
+      "description": "At least 85 of 169 seats.",
+      "scope": "body",
+      "conditions": [
+        {
+          "type": "sum",
+          "metric": "seats",
+          "operator": ">=",
+          "threshold": {
+            "kind": "absolute",
+            "metric": "seats",
+            "value": 85
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "country": "NO",
+    "period": "2025–2029",
+    "sources": [
+      "https://www.stortinget.no/en/in-english/members-of-the-storting/",
+      "https://en.wikipedia.org/wiki/2025_Norwegian_parliamentary_election"
+    ]
+  }
+}
+

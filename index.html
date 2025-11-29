@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Majority Calculator – Demo</title>
+</head>
+<body>
+  <h1>Governing body JSON demo</h1>
+
+  <!-- This is where we’ll insert the JSON contents -->
+  <pre id="governing-body-output"></pre>
+
+  <!-- Your script -->
+  <script src="governing-body-viewer.js"></script>
+  <script>
+    // Call the placeholder loader once the DOM is ready
+    document.addEventListener("DOMContentLoaded", function () {
+      // First argument: JSON file (relative to this HTML file)
+      // Second argument: id of the tag to render into
+      loadGoverningBody("no_storting_2025_2029.json", "governing-body-output");
+    });
+  </script>
+</body>
+</html>
