@@ -38,6 +38,7 @@ function renderGoverningBody(body, container) {
 
   const metrics = body.metrics || {};
   const groups = body.groups || [];
+  const rules = body.rules || [];
 
   // Determine default metric (e.g. "seats")
   const defaultMetricId = getDefaultMetricId(metrics);
@@ -57,37 +58,120 @@ function renderGoverningBody(body, container) {
   let metricPhrase = "No metrics defined";
   if (defaultMetricId && metrics[defaultMetricId]) {
     const def = metrics[defaultMetricId];
-    const total = def.total != null ? def.total : sumMetric(groups, defaultMetricId);
+    const total =
+      def.total != null ? def.total : sumMetric(groups, defaultMetricId);
     metricPhrase = `${def.label || defaultMetricId} total: ${total}`;
   }
 
-  const period = body.metadata && body.metadata.period ? ` • Period: ${body.metadata.period}` : "";
-  const country = body.metadata && body.metadata.country ? ` • Country: ${body.metadata.country}` : "";
+  const period =
+    body.metadata && body.metadata.period
+      ? ` • Period: ${body.metadata.period}`
+      : "";
+  const country =
+    body.metadata && body.metadata.country
+      ? ` • Country: ${body.metadata.country}`
+      : "";
 
   meta.textContent = metricPhrase + period + country;
   header.appendChild(meta);
 
   container.appendChild(header);
 
-  // Groups
+  // Coalition summary
+  const coalitionBox = document.createElement("div");
+  coalitionBox.className = "coalition-summary";
+
+  const coalitionTotalsEl = document.createElement("p");
+  coalitionTotalsEl.className = "coalition-totals";
+  coalitionBox.appendChild(coalitionTotalsEl);
+
+  const rulesTitleEl = document.createElement("p");
+  rulesTitleEl.className = "coalition-rules-title";
+  rulesTitleEl.textContent = "Rules:";
+  coalitionBox.appendChild(rulesTitleEl);
+
+  const rulesListEl = document.createElement("ul");
+  rulesListEl.className = "coalition-rules";
+  coalitionBox.appendChild(rulesListEl);
+
+  container.appendChild(coalitionBox);
+
+  // Groups list
   const list = document.createElement("div");
   list.className = "group-list";
 
+  // Keep track of selected group ids (coalition)
+  const selectedIds = new Set();
+
+  function updateCoalitionSummary() {
+    const coalitionGroups = groups.filter((g) => selectedIds.has(g.id));
+
+    if (coalitionGroups.length === 0) {
+      coalitionTotalsEl.textContent = "No groups selected.";
+      rulesListEl.innerHTML = "";
+      return;
+    }
+
+    // Coalition totals for default metric
+    if (defaultMetricId && metrics[defaultMetricId]) {
+      const def = metrics[defaultMetricId];
+      const totalBody =
+        def.total != null ? def.total : sumMetric(groups, defaultMetricId);
+      const totalCoalition = sumMetric(coalitionGroups, defaultMetricId);
+      const pct =
+        totalBody > 0 ? (totalCoalition / totalBody) * 100 : null;
+
+      const pctText =
+        pct != null ? ` (${pct.toFixed(1)}% of ${totalBody})` : "";
+
+      coalitionTotalsEl.textContent = `Coalition: ${coalitionGroups.length} groups, ${totalCoalition} ${def.unit || def.label || defaultMetricId}${pctText}`;
+    } else {
+      coalitionTotalsEl.textContent = `Coalition: ${coalitionGroups.length} groups.`;
+    }
+
+    // Evaluate rules
+    rulesListEl.innerHTML = "";
+    if (!rules.length) {
+      const li = document.createElement("li");
+      li.textContent = "No rules defined for this governing body.";
+      rulesListEl.appendChild(li);
+      return;
+    }
+
+    const results = evaluateRules(body, coalitionGroups);
+    results.forEach((result) => {
+      const li = document.createElement("li");
+      const symbol = result.satisfied ? "✔" : "✖";
+      const name = result.rule.name || result.rule.id || "Rule";
+      li.textContent = `${symbol} ${name}`;
+      rulesListEl.appendChild(li);
+    });
+  }
+
+  // Build group cards
   groups.forEach((group) => {
     const item = document.createElement("div");
     item.className = "group-item";
 
     // Click to toggle "selected"
     item.addEventListener("click", () => {
-      item.classList.toggle("selected");
-      // You can hook coalition logic here later if you like.
-      console.log("Toggled group:", group.id, "selected:", item.classList.contains("selected"));
+      if (selectedIds.has(group.id)) {
+        selectedIds.delete(group.id);
+        item.classList.remove("selected");
+      } else {
+        selectedIds.add(group.id);
+        item.classList.add("selected");
+      }
+      updateCoalitionSummary();
     });
 
     // Color dot
     const colorDot = document.createElement("div");
     colorDot.className = "group-color-dot";
-    const color = group.metadata && group.metadata.color ? group.metadata.color : "#e5e7eb";
+    const color =
+      group.metadata && group.metadata.color
+        ? group.metadata.color
+        : "#e5e7eb";
     colorDot.style.backgroundColor = color;
     item.appendChild(colorDot);
 
@@ -155,7 +239,141 @@ function renderGoverningBody(body, container) {
   });
 
   container.appendChild(list);
+
+  // Initial summary (no groups selected)
+  updateCoalitionSummary();
 }
+
+/* ---------- Rule evaluation helpers ---------- */
+
+/**
+ * Evaluate all rules for a given coalition.
+ *
+ * @param {object} body - Governing body
+ * @param {Array<object>} coalitionGroups - groups in coalition
+ * @returns {Array<{rule: object, satisfied: boolean}>}
+ */
+function evaluateRules(body, coalitionGroups) {
+  const rules = body.rules || [];
+  const metrics = body.metrics || {};
+  const groups = body.groups || [];
+
+  return rules.map((rule) => {
+    const conditions = rule.conditions || [];
+    const satisfied = conditions.every((cond) =>
+      evaluateCondition(cond, {
+        body,
+        metrics,
+        groups,
+        coalitionGroups,
+      })
+    );
+    return { rule, satisfied };
+  });
+}
+
+/**
+ * Evaluate a single condition.
+ */
+function evaluateCondition(condition, ctx) {
+  switch (condition.type) {
+    case "sum":
+      return evaluateSumCondition(condition, ctx);
+    case "countGroups":
+      return evaluateCountGroupsCondition(condition, ctx);
+    default:
+      console.warn("Unknown condition type:", condition.type);
+      return false;
+  }
+}
+
+/**
+ * Sum condition: sum of a metric over coalition compared to threshold.
+ */
+function evaluateSumCondition(condition, ctx) {
+  const metricId = condition.metric;
+  const operator = condition.operator || ">=";
+  const thresholdSpec = condition.threshold || {};
+  const coalitionSum = sumMetric(ctx.coalitionGroups, metricId);
+
+  const thresholdValue = resolveThreshold(thresholdSpec, {
+    body: ctx.body,
+    metrics: ctx.metrics,
+    groups: ctx.groups,
+    metricId,
+  });
+
+  return compareValues(operator, coalitionSum, thresholdValue);
+}
+
+/**
+ * CountGroups condition: number of groups in coalition compared to value.
+ */
+function evaluateCountGroupsCondition(condition, ctx) {
+  const operator = condition.operator || ">=";
+  const value = condition.value != null ? condition.value : 0;
+  const count = ctx.coalitionGroups.length;
+  return compareValues(operator, count, value);
+}
+
+/**
+ * Resolve threshold specification to a numeric value.
+ *
+ * threshold = {
+ *   kind: "fractionOfTotal" | "absolute" | "percentage",
+ *   metric: "seats",
+ *   value: number,
+ *   offset?: number
+ * }
+ */
+function resolveThreshold(threshold, ctx) {
+  const kind = threshold.kind || "absolute";
+  const value = typeof threshold.value === "number" ? threshold.value : 0;
+  const offset = typeof threshold.offset === "number" ? threshold.offset : 0;
+
+  if (kind === "fractionOfTotal") {
+    const metricId = threshold.metric || ctx.metricId;
+    const def = ctx.metrics[metricId] || {};
+    const total =
+      def.total != null ? def.total : sumMetric(ctx.groups, metricId);
+    return value * total + offset;
+  }
+
+  if (kind === "percentage") {
+    // Here we assume coalitionSum is itself a percentage metric,
+    // so we just compare directly to `value`.
+    return value + offset;
+  }
+
+  // absolute
+  return value + offset;
+}
+
+/**
+ * Compare two numeric values with an operator.
+ */
+function compareValues(operator, a, b) {
+  switch (operator) {
+    case ">":
+      return a > b;
+    case ">=":
+      return a >= b;
+    case "<":
+      return a < b;
+    case "<=":
+      return a <= b;
+    case "==":
+    case "=":
+      return a === b;
+    case "!=":
+      return a !== b;
+    default:
+      console.warn("Unknown operator:", operator);
+      return false;
+  }
+}
+
+/* ---------- Shared helpers ---------- */
 
 function getDefaultMetricId(metrics) {
   const entries = Object.entries(metrics || {});
