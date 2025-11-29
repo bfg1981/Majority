@@ -2,21 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Majority Calculator – Demo</title>
+  <title>Majority Calculator – Governing Body Demo</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Governing body JSON demo</h1>
+  <h1>Governing body viewer</h1>
+  <p>This demo loads a governing-body JSON and shows each group as a selectable item.</p>
 
-  <!-- This is where we’ll insert the JSON contents -->
-  <pre id="governing-body-output"></pre>
+  <div id="governing-body-output"></div>
 
-  <!-- Your script -->
   <script src="governing-body-viewer.js"></script>
   <script>
-    // Call the placeholder loader once the DOM is ready
     document.addEventListener("DOMContentLoaded", function () {
-      // First argument: JSON file (relative to this HTML file)
-      // Second argument: id of the tag to render into
+      // First argument: JSON file (relative path)
+      // Second argument: id of the container element
       loadGoverningBody("no_storting_2025_2029.json", "governing-body-output");
     });
   </script>
