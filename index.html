@@ -52,7 +52,15 @@
     })
     .catch((err) => {
       console.error("[init] Failed to initialize governing body viewer:", err);
-    });
+  });
+  </script>
+  <script type="module">
+  import { getManifestSlow } from "./getManifest.js";
+
+  getManifestSlow((configs) => {
+    console.log("Loaded configs:", configs);
+    // Each element: { file, config }
+  });
 </script>
 
 </body>
