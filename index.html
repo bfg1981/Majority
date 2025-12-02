@@ -52,6 +52,9 @@
         idSelect.appendChild(opt);
       }
 
+      //Disable if only one id
+      idSelect.disabled = ids.length <= 1;
+
       let currentId = ids[0];
       let currentPeriod = null;
 
@@ -72,6 +75,9 @@
           currentPeriod = periods[0] || null;
           periodSelect.value = currentPeriod;
         }
+
+        //Disable if only one id
+        periodSelect.disabled = periods.length <= 1;
       }
 
       function loadCurrent() {
