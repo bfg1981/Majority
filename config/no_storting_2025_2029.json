@@ -1,6 +1,7 @@
 {
-  "id": "no_storting_2025_2029",
-  "name": "Stortinget 2025–2029",
+  "id": "no_storting",
+  "name": "Stortinget",
+  "period": "2025-2029",
   "kind": "parliament",
   "version": 1,
   "metrics": {
