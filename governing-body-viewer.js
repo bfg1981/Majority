@@ -185,10 +185,14 @@ function renderGoverningBody(body, container) {
     if (iconMeta && iconMeta.type === "emoji") {
       iconEl.textContent = iconMeta.value;
       item.appendChild(iconEl);
-    } else if (iconMeta && iconMeta.type === "url") {
+    } else if (iconMeta && (iconMeta.type === "url" || iconMeta.type === "image")) {
       const img = document.createElement("img");
-      img.src = iconMeta.value;
-      img.alt = group.shortName || group.name || group.id;
+      img.src = iconMeta.type === "image" ? iconMeta.src : iconMeta.value;
+      img.alt =
+        iconMeta.alt ||
+        group.shortName ||
+        group.name ||
+        group.id;
       img.style.width = "1.2rem";
       img.style.height = "1.2rem";
       img.style.objectFit = "contain";
