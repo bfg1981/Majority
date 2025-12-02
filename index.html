@@ -9,69 +9,97 @@
   <h1>Governing body viewer</h1>
   <p>This demo loads a governing-body JSON and shows each group as a selectable item.</p>
 
+  <select id="governing-body-id"></select>
+  <select id="governing-body-period"></select>
+
   <div id="governing-body-output"></div>
 
   <script src="governing-body-viewer.js"></script>
-<script type="module">
-  import { getConfigIndex } from "./config-discovery.js";
 
-  const targetId = "governing-body-output";
+  <!-- INTEGRATED MANIFEST + DROPDOWN + LOADER LOGIC -->
+  <script type="module">
+    import { getManifestSlow, createManifest } from "./getManifest.js";
 
-  // Promise that resolves when DOM is ready
-  const domReady = new Promise((resolve) => {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => resolve(), {
-        once: true,
+    const idSelect = document.getElementById("governing-body-id");
+    const periodSelect = document.getElementById("governing-body-period");
+    const outputId = "governing-body-output";
+
+    const domReady = new Promise((resolve) => {
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", resolve, { once: true });
+      } else {
+        resolve();
+      }
+    });
+
+    const manifestReady = new Promise((resolve) => {
+      getManifestSlow((configs) => {
+        const manifest = createManifest(configs);
+        resolve(manifest);
       });
-    } else {
-      resolve();
-    }
-  });
+    });
 
-  // Promise that resolves with the discovered configs
-  const configsReady = getConfigIndex();
+    Promise.all([domReady, manifestReady]).then(([, manifest]) => {
+      const ids = Object.keys(manifest);
+      if (ids.length === 0) return;
 
-  Promise.all([domReady, configsReady])
-    .then(([, entries]) => {
-      if (!entries || entries.length === 0) {
-        console.warn("[init] No config entries discovered.");
-        return;
+      // Populate ID dropdown
+      idSelect.innerHTML = "";
+      for (const id of ids) {
+        const opt = document.createElement("option");
+        opt.value = id;
+        opt.textContent = id;
+        idSelect.appendChild(opt);
       }
 
-      const first = entries[0]; // { file, label }
+      let currentId = ids[0];
+      let currentPeriod = null;
 
-      if (typeof window.loadGoverningBody !== "function") {
-        console.error(
-          "[init] window.loadGoverningBody is not available. Did governing-body-viewer.js load?"
-        );
-        return;
+      function populatePeriods(preservePeriod = true) {
+        const periods = Object.keys(manifest[currentId] || {});
+        periodSelect.innerHTML = "";
+
+        for (const p of periods) {
+          const opt = document.createElement("option");
+          opt.value = p;
+          opt.textContent = p;
+          periodSelect.appendChild(opt);
+        }
+
+        if (preservePeriod && currentPeriod && periods.includes(currentPeriod)) {
+          periodSelect.value = currentPeriod;
+        } else {
+          currentPeriod = periods[0] || null;
+          periodSelect.value = currentPeriod;
+        }
       }
 
-      console.log(first.file);
-      window.loadGoverningBody(first.file, targetId);
-    })
-    .catch((err) => {
-      console.error("[init] Failed to initialize governing body viewer:", err);
-  });
+      function loadCurrent() {
+        if (!currentId || !currentPeriod) return;
+        const file = manifest[currentId][currentPeriod];
+        if (file) {
+          loadGoverningBody(file, outputId);
+        }
+      }
+
+      // Initial population + load
+      populatePeriods(false);
+      loadCurrent();
+
+      idSelect.addEventListener("change", () => {
+        const previousPeriod = currentPeriod;
+        currentId = idSelect.value;
+        currentPeriod = previousPeriod;
+        populatePeriods(true);
+        loadCurrent();
+      });
+
+      periodSelect.addEventListener("change", () => {
+        currentPeriod = periodSelect.value;
+        loadCurrent();
+      });
+    });
   </script>
-  <script type="module">
-  import { getManifestSlow } from "./getManifest.js";
-
-  getManifestSlow((configs) => {
-    console.log("Loaded configs:", configs);
-    // Each element: { file, config }
-  });
-  </script>
-
-  <script type="module">
-  import { getManifestSlow, createManifest } from "./getManifest.js";
-
-  getManifestSlow((configs) => {
-    const manifest = createManifest(configs);
-    console.log("Manifest:", manifest);
-  });
-</script>
-
 
 </body>
 </html>
