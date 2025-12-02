@@ -12,12 +12,48 @@
   <div id="governing-body-output"></div>
 
   <script src="governing-body-viewer.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // First argument: JSON file (relative path)
-      // Second argument: id of the container element
-      loadGoverningBody("no_storting_2025_2029.json", "governing-body-output");
+<script type="module">
+  import { getConfigIndex } from "./config-discovery.js";
+
+  const targetId = "governing-body-output";
+
+  // Promise that resolves when DOM is ready
+  const domReady = new Promise((resolve) => {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => resolve(), {
+        once: true,
+      });
+    } else {
+      resolve();
+    }
+  });
+
+  // Promise that resolves with the discovered configs
+  const configsReady = getConfigIndex();
+
+  Promise.all([domReady, configsReady])
+    .then(([, entries]) => {
+      if (!entries || entries.length === 0) {
+        console.warn("[init] No config entries discovered.");
+        return;
+      }
+
+      const first = entries[0]; // { file, label }
+
+      if (typeof window.loadGoverningBody !== "function") {
+        console.error(
+          "[init] window.loadGoverningBody is not available. Did governing-body-viewer.js load?"
+        );
+        return;
+      }
+
+      console.log(first.file);
+      window.loadGoverningBody(first.file, targetId);
+    })
+    .catch((err) => {
+      console.error("[init] Failed to initialize governing body viewer:", err);
     });
-  </script>
+</script>
+
 </body>
 </html>
