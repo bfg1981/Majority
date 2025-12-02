@@ -145,6 +145,10 @@ function renderGoverningBody(body, container) {
       li.textContent = `${symbol} ${name}`;
       rulesListEl.appendChild(li);
     });
+
+    const suggested = findMinimalWinningCoalitions(body, selectedIds, rules[0].id);
+
+    console.log("Suggested coalitions:", suggested.map(cs => cs.map(g => g.shortName || g.id)));
   }
 
   // Build group cards
@@ -388,6 +392,114 @@ function sumMetric(groups, metricId) {
     return typeof v === "number" ? sum + v : sum;
   }, 0);
 }
+
+/**
+ * Find minimal winning coalitions that extend the current selection.
+ *
+ * @param {object} body - Governing body JSON
+ * @param {Set<string>} baselineIds - group ids that must be included
+ * @param {string} ruleId - id of the rule to use (e.g. "absolute_majority")
+ * @returns {Array<Array<object>>} - list of coalitions, each an array of group objects
+ */
+function findMinimalWinningCoalitions(body, baselineIds, ruleId) {
+  const groups = body.groups || [];
+  const metrics = body.metrics || {};
+  const rules = body.rules || [];
+
+  const defaultMetricId = getDefaultMetricId(metrics);
+  if (!defaultMetricId) return [];
+
+  const rule = rules.find((r) => r.id === ruleId) || rules[0];
+  if (!rule) return [];
+
+  // We’ll use the first sum condition on the default metric as the "threshold" driver
+  const sumCond = (rule.conditions || []).find(
+    (c) => c.type === "sum" && c.metric === defaultMetricId
+  );
+  if (!sumCond) {
+    // If no suitable sum condition, bail out for now
+    return [];
+  }
+
+  const threshold = resolveThreshold(sumCond.threshold || {}, {
+    body,
+    metrics,
+    groups,
+    metricId: defaultMetricId,
+  });
+  const operator = sumCond.operator || ">=";
+
+  // Helper: does a coalition satisfy the rule (using this sum condition)?
+  const isWinning = (coalitionGroups) => {
+    const seats = sumMetric(coalitionGroups, defaultMetricId);
+    return compareValues(operator, seats, threshold);
+  };
+
+  const idToGroup = new Map(groups.map((g) => [g.id, g]));
+  const baselineGroups = groups.filter((g) => baselineIds.has(g.id));
+  const baselineSeats = sumMetric(baselineGroups, defaultMetricId);
+
+  const remaining = groups.filter((g) => !baselineIds.has(g.id));
+
+  const results = [];
+  const n = remaining.length;
+
+  // Precompute remaining seat sums for pruning
+  const remainingSeats = remaining.map(
+    (g) => (g.metrics && g.metrics[defaultMetricId]) || 0
+  );
+  const suffixMax = new Array(n + 1);
+  suffixMax[n] = 0;
+  for (let i = n - 1; i >= 0; i--) {
+    suffixMax[i] = suffixMax[i + 1] + remainingSeats[i];
+  }
+
+  const currentIds = new Set(baselineIds);
+
+  function dfs(index, currentSeats) {
+    // Check if current coalition is already winning
+    if (compareValues(operator, currentSeats, threshold)) {
+      // Check minimality w.r.t. *added* groups (we never remove baseline)
+      const addedIds = [...currentIds].filter((id) => !baselineIds.has(id));
+      for (const id of addedIds) {
+        const g = idToGroup.get(id);
+        const s = (g.metrics && g.metrics[defaultMetricId]) || 0;
+        const seatsWithout = currentSeats - s;
+        if (compareValues(operator, seatsWithout, threshold)) {
+          // Still winning after removing this added group -> not minimal
+          return;
+        }
+      }
+      const coalitionGroups = groups.filter((g) => currentIds.has(g.id));
+      results.push(coalitionGroups);
+      return;
+    }
+
+    // No more groups to add
+    if (index >= n) return;
+
+    // Prune if even adding all remaining seats cannot reach threshold
+    const maxPossible = currentSeats + suffixMax[index];
+    if (!compareValues(operator, maxPossible, threshold)) {
+      return;
+    }
+
+    // Option 1: include this group
+    const g = remaining[index];
+    const s = (g.metrics && g.metrics[defaultMetricId]) || 0;
+    currentIds.add(g.id);
+    dfs(index + 1, currentSeats + s);
+    currentIds.delete(g.id);
+
+    // Option 2: skip this group
+    dfs(index + 1, currentSeats);
+  }
+
+  dfs(0, baselineSeats);
+
+  return results;
+}
+
 
 // Expose function globally
 window.loadGoverningBody = loadGoverningBody;
