@@ -63,3 +63,71 @@ export async function getManifestSlow(onDone, options = {}) {
   onDone(loaded);
 }
 
+/**
+ * Build a manifest of the form:
+ *
+ * {
+ *   "<id>": {
+ *     "<period>": "<file>",
+ *     ...
+ *   },
+ *   ...
+ * }
+ *
+ * where `id` and `period` are taken from each config JSON, and `file`
+ * is the URL/path discovered by config-discovery.
+ *
+ * @param {Array<{file: string, config: any}>} entries
+ * @returns {Record<string, Record<string, string>>}
+ */
+export function createManifest(entries) {
+  const manifest = {};
+
+  for (const { file, config } of entries) {
+    if (!config || typeof config !== "object") {
+      console.warn("[createManifest] Skipping entry with invalid config:", file);
+      continue;
+    }
+
+    const id = config.id;
+    const period = config.period;
+
+    if (typeof id !== "string" || !id) {
+      console.warn(
+        "[createManifest] Skipping entry without valid id:",
+        file,
+        config
+      );
+      continue;
+    }
+
+    if (typeof period !== "string" || !period) {
+      console.warn(
+        "[createManifest] Skipping entry without valid period:",
+        file,
+        config
+      );
+      continue;
+    }
+
+    if (!manifest[id]) {
+      manifest[id] = {};
+    }
+
+    if (manifest[id][period] && manifest[id][period] !== file) {
+      console.warn(
+        "[createManifest] Duplicate id/period combination:",
+        id,
+        period,
+        "existing:",
+        manifest[id][period],
+        "new:",
+        file
+      );
+    }
+
+    manifest[id][period] = file;
+  }
+
+  return manifest;
+}

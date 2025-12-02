@@ -61,7 +61,17 @@
     console.log("Loaded configs:", configs);
     // Each element: { file, config }
   });
+  </script>
+
+  <script type="module">
+  import { getManifestSlow, createManifest } from "./getManifest.js";
+
+  getManifestSlow((configs) => {
+    const manifest = createManifest(configs);
+    console.log("Manifest:", manifest);
+  });
 </script>
+
 
 </body>
 </html>
