@@ -1,0 +1,234 @@
+{
+  "id": "Norges Storting",
+  "name": "Stortinget",
+  "period": "2021-2025",
+  "kind": "parliament",
+  "version": 1,
+  "metrics": {
+    "seats": {
+      "label": "Seats",
+      "unit": "seat",
+      "kind": "discrete",
+      "total": 169,
+      "isDefault": true
+    }
+  },
+  "groups": [
+    {
+      "id": "ap",
+      "name": "Arbeiderpartiet",
+      "shortName": "Ap",
+      "kind": "party",
+      "metrics": {
+        "seats": 48
+      },
+      "metadata": {
+        "color": "#e6194b",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_ap_logo.svg",
+          "alt": "Arbeiderpartiet logo"
+        }
+      }
+    },
+    {
+      "id": "h",
+      "name": "Høyre",
+      "shortName": "H",
+      "kind": "party",
+      "metrics": {
+        "seats": 36
+      },
+      "metadata": {
+        "color": "#005aa3",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_h_logo.svg",
+          "alt": "Høyres logo"
+        }
+      }
+    },
+    {
+      "id": "sp",
+      "name": "Senterpartiet",
+      "shortName": "Sp",
+      "kind": "party",
+      "metrics": {
+        "seats": 28
+      },
+      "metadata": {
+        "color": "#78be20",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_sp_logo.png",
+          "alt": "Senterpartiets logo"
+        }
+      }
+    },
+    {
+      "id": "frp",
+      "name": "Fremskrittspartiet",
+      "shortName": "FrP",
+      "kind": "party",
+      "metrics": {
+        "seats": 21
+      },
+      "metadata": {
+        "color": "#003f91",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_frp_logo.svg",
+          "alt": "Fremskrittspartiets logo"
+        }
+      }
+    },
+    {
+      "id": "sv",
+      "name": "Sosialistisk Venstreparti",
+      "shortName": "SV",
+      "kind": "party",
+      "metrics": {
+        "seats": 13
+      },
+      "metadata": {
+        "color": "#ba0c2f",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_sv_logo.svg",
+          "alt": "Sosialistisk Venstreparti sin logo"
+        }
+      }
+    },
+    {
+      "id": "r",
+      "name": "Rødt",
+      "shortName": "R",
+      "kind": "party",
+      "metrics": {
+        "seats": 8
+      },
+      "metadata": {
+        "color": "#ff0000",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_r_logo.svg",
+          "alt": "Rødt sin logo"
+        }
+      }
+    },
+    {
+      "id": "v",
+      "name": "Venstre",
+      "shortName": "V",
+      "kind": "party",
+      "metrics": {
+        "seats": 8
+      },
+      "metadata": {
+        "color": "#00a79d",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_v_logo.svg",
+          "alt": "Venstres logo"
+        }
+      }
+    },
+    {
+      "id": "krf",
+      "name": "Kristelig Folkeparti",
+      "shortName": "KrF",
+      "kind": "party",
+      "metrics": {
+        "seats": 3
+      },
+      "metadata": {
+        "color": "#ffcc33",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_krf_logo.svg",
+          "alt": "Kristelig Folkeparti sin logo"
+        }
+      }
+    },
+    {
+      "id": "mdg",
+      "name": "Miljøpartiet De Grønne",
+      "shortName": "MDG",
+      "kind": "party",
+      "metrics": {
+        "seats": 3
+      },
+      "metadata": {
+        "color": "#347102",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_mdg_logo.svg",
+          "alt": "Miljøpartiet de Grønnes logo"
+        }
+      }
+    },
+    {
+      "id": "pf",
+      "name": "Pasientfokus",
+      "shortName": "PF",
+      "kind": "party",
+      "metrics": {
+        "seats": 1
+      },
+      "metadata": {
+        "color": "#999999",
+        "icon": {
+          "type": "image",
+          "src": "icons/no_pf_logo.png",
+          "alt": "Pasientfokus logo"
+        }
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "absolute_majority",
+      "name": "Absolute majority (≥ 85 seats)",
+      "description": "At least 85 of 169 seats.",
+      "scope": "body",
+      "conditions": [
+        {
+          "type": "sum",
+          "metric": "seats",
+          "operator": ">=",
+          "threshold": {
+            "kind": "absolute",
+            "metric": "seats",
+            "value": 85
+          }
+        }
+      ]
+    },
+    {
+      "id": "constitutional_two_thirds",
+      "name": "Constitutional majority (≥ 2/3 of seats)",
+      "description": "At least 113 of 169 seats (two-thirds majority).",
+      "scope": "body",
+      "conditions": [
+        {
+          "type": "sum",
+          "metric": "seats",
+          "operator": ">=",
+          "threshold": {
+            "kind": "absolute",
+            "metric": "seats",
+            "value": 113
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "country": "NO",
+    "period": "2021–2025",
+    "sources": [
+      "https://www.stortinget.no/no/Stortinget-og-demokratiet/Representantene/",
+      "https://en.wikipedia.org/wiki/2021_Norwegian_parliamentary_election"
+    ]
+  }
+}
