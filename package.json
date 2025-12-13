@@ -1,0 +1,11 @@
+{
+  "name": "governing-body-viewer",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "playwright": "^1.50.0"
+  },
+  "scripts": {
+    "generate:cache": "node scripts/generate-deploy-cache.mjs"
+  }
+}

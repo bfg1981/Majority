@@ -1,1 +1,4 @@
 .DS_Store
+config/index.json
+config/manifest.json
+node_modules
