@@ -106,6 +106,66 @@ function renderGoverningBody(body, container) {
   // Single-select (but clearable) rule selection for console output
   let selectedRuleId = null;
 
+  const COALITION_DISPLAY_DELAY = 1000;
+  let displayTimer = null;
+  let displayRunToken = 0;
+
+  const groupElsById = new Map();
+
+  function clearSuggestedHighlights() {
+    for (const [, el] of groupElsById) {
+      el.classList.remove("suggested");
+    }
+  }
+
+  function stopCoalitionDisplayLoop() {
+    displayRunToken += 1;
+    if (displayTimer != null) {
+      clearTimeout(displayTimer);
+      displayTimer = null;
+    }
+    clearSuggestedHighlights();
+  }
+
+  function startCoalitionDisplayLoop(coalitions) {
+    stopCoalitionDisplayLoop();
+    if (!Array.isArray(coalitions) || coalitions.length === 0) return;
+
+    const myToken = displayRunToken;
+    let index = 0;
+
+    const step = () => {
+      if (myToken !== displayRunToken) return;
+
+      clearSuggestedHighlights();
+      const coalition = coalitions[index];
+      if (Array.isArray(coalition)) {
+        for (const g of coalition) {
+          if (!g || !g.id) continue;
+          if (selectedIds.has(g.id)) continue; // never highlight already selected parties
+          const el = groupElsById.get(g.id);
+          if (el) el.classList.add("suggested");
+        }
+      }
+
+      index += 1;
+      if (index < coalitions.length) {
+        displayTimer = setTimeout(step, COALITION_DISPLAY_DELAY);
+        return;
+      }
+
+      // Clear the highlight after the final coalition has been shown.
+      displayTimer = setTimeout(() => {
+        if (myToken !== displayRunToken) return;
+        clearSuggestedHighlights();
+        displayTimer = null;
+      }, COALITION_DISPLAY_DELAY);
+    };
+
+    step();
+  }
+
+
   function updateCoalitionSummary() {
     const coalitionGroups = groups.filter((g) => selectedIds.has(g.id));
 
@@ -137,6 +197,7 @@ function renderGoverningBody(body, container) {
       const li = document.createElement("li");
       li.textContent = "No rules defined for this governing body.";
       rulesListEl.appendChild(li);
+      stopCoalitionDisplayLoop();
       return;
     }
 
@@ -168,6 +229,9 @@ function renderGoverningBody(body, container) {
         "Suggested coalitions:",
         suggested.map((cs) => cs.map((g) => g.shortName || g.id))
       );
+      startCoalitionDisplayLoop(suggested);
+    } else {
+      stopCoalitionDisplayLoop();
     }
   }
 
@@ -175,6 +239,7 @@ function renderGoverningBody(body, container) {
   groups.forEach((group) => {
     const item = document.createElement("div");
     item.className = "group-item";
+    groupElsById.set(group.id, item);
 
     // Click to toggle "selected"
     item.addEventListener("click", () => {

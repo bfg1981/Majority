@@ -125,3 +125,9 @@ h1 {
   border-color: #2563eb;
   background: #eff6ff;
 }
+
+
+/* Highlight suggested (but not yet selected) coalition members */
+.group-item.suggested:not(.selected) {
+  background: #fef9c3;
+}
