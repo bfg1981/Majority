@@ -19,7 +19,7 @@
 
   <!-- INTEGRATED MANIFEST + DROPDOWN + LOADER LOGIC -->
   <script type="module">
-    import { getManifestSlow, createManifest } from "./getManifest.js";
+    import { getManifest } from "./getManifest.js";
 
     const idSelect = document.getElementById("governing-body-id");
     const periodSelect = document.getElementById("governing-body-period");
@@ -34,8 +34,7 @@
     });
 
     const manifestReady = new Promise((resolve) => {
-      getManifestSlow((configs) => {
-        const manifest = createManifest(configs);
+      getManifest((manifest) => {
         resolve(manifest);
       });
     });

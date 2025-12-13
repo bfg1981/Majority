@@ -7,6 +7,59 @@
 import { getConfigIndex } from "./config-discovery.js";
 
 /**
+ * Preferred entry point.
+ *
+ * Tries to load a cached manifest from /config/manifest.json.
+ * If missing or invalid, falls back to the slow discovery path
+ * (getManifestSlow + createManifest).
+ *
+ * @param {(manifest: Record<string, Record<string, string>>) => void} onDone
+ * @param {Object} [options]
+ * @param {string} [options.cachedManifestUrl="/config/manifest.json"]
+ * @param {Object} [options.slowOptions]
+ *        Options forwarded to getManifestSlow (e.g. discoveryOptions).
+ */
+export async function getManifest(onDone, options = {}) {
+  const {
+    cachedManifestUrl = "/config/manifest.json",
+    slowOptions = {},
+  } = options;
+
+  // 1) Fast path: cached manifest (deployment artifact)
+  try {
+    const res = await fetch(cachedManifestUrl, {
+      headers: { Accept: "application/json,*/*;q=0.8" },
+    });
+
+    if (res.ok) {
+      const json = await res.json();
+      // Basic shape check: object of objects with string leaves
+      if (json && typeof json === "object" && !Array.isArray(json)) {
+        onDone(json);
+        return;
+      }
+      console.warn(
+        "[getManifest] Cached manifest has unexpected shape, falling back:",
+        cachedManifestUrl
+      );
+    }
+  } catch (err) {
+    // Network error, CORS, etc. => fall back
+    console.warn(
+      "[getManifest] Failed to load cached manifest, falling back:",
+      cachedManifestUrl,
+      err
+    );
+  }
+
+  // 2) Slow path: discover + fetch configs, then build manifest
+  return getManifestSlow((entries) => {
+    const manifest = createManifest(entries);
+    onDone(manifest);
+  }, slowOptions);
+}
+
+/**
  * Discover all config files and load them in parallel, then call `onDone`.
  *
  * @param {(configs: Array<{file: string, config: any}>) => void} onDone
