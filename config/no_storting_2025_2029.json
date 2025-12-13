@@ -24,7 +24,11 @@
       },
       "metadata": {
         "color": "#e6194b",
-        "icon": { "type": "emoji", "value": "🌹" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_ap_logo.svg",
+          "alt": "Arbeiderpartiet logo"
+        }
       }
     },
     {
@@ -37,7 +41,11 @@
       },
       "metadata": {
         "color": "#003f91",
-        "icon": { "type": "emoji", "value": "🚛" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_frp_logo.svg",
+          "alt": "Fremskrittspartiets logo"
+        }
       }
     },
     {
@@ -50,7 +58,11 @@
       },
       "metadata": {
         "color": "#005aa3",
-        "icon": { "type": "emoji", "value": "🔵" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_h_logo.svg",
+          "alt": "Høyres logo"
+        }
       }
     },
     {
@@ -63,7 +75,11 @@
       },
       "metadata": {
         "color": "#ba0c2f",
-        "icon": { "type": "emoji", "value": "✊" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_sv_logo.svg",
+          "alt": "Sosialistisk Venstreparti sin logo"
+        }
       }
     },
     {
@@ -76,7 +92,11 @@
       },
       "metadata": {
         "color": "#78be20",
-        "icon": { "type": "emoji", "value": "🌾" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_sp_logo.png",
+          "alt": "Senterpartiets logo"
+        }
       }
     },
     {
@@ -89,7 +109,11 @@
       },
       "metadata": {
         "color": "#ff0000",
-        "icon": { "type": "emoji", "value": "🟥" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_r_logo.svg",
+          "alt": "Rødt sin logo"
+        }
       }
     },
     {
@@ -102,7 +126,11 @@
       },
       "metadata": {
         "color": "#347102",
-        "icon": { "type": "emoji", "value": "🌱" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_mdg_logo.svg",
+          "alt": "Miljøpartiet de Grønnes logo"
+        }
       }
     },
     {
@@ -115,7 +143,11 @@
       },
       "metadata": {
         "color": "#ffcc33",
-        "icon": { "type": "emoji", "value": "✝️" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_krf_logo.svg",
+          "alt": "Kristelig Folkeparti sin logo"
+        }
       }
     },
     {
@@ -128,29 +160,15 @@
       },
       "metadata": {
         "color": "#00a79d",
-        "icon": { "type": "emoji", "value": "🟢" }
+        "icon": {
+          "type": "image",
+          "src": "icons/no_v_logo.svg",
+          "alt": "Venstres logo"
+        }
       }
     }
   ],
   "rules": [
-    {
-      "id": "simple_majority",
-      "name": "Simple majority of seats",
-      "description": "More than 50% of seats (at least 85 of 169).",
-      "scope": "body",
-      "conditions": [
-        {
-          "type": "sum",
-          "metric": "seats",
-          "operator": ">",
-          "threshold": {
-            "kind": "fractionOfTotal",
-            "metric": "seats",
-            "value": 0.5
-          }
-        }
-      ]
-    },
     {
       "id": "absolute_majority",
       "name": "Absolute majority (≥ 85 seats)",
@@ -168,6 +186,24 @@
           }
         }
       ]
+    },
+    {
+      "id": "constitutional_two_thirds",
+      "name": "Constitutional majority (≥ 2/3 of seats)",
+      "description": "At least 113 of 169 seats (two-thirds majority).",
+      "scope": "body",
+      "conditions": [
+        {
+          "type": "sum",
+          "metric": "seats",
+          "operator": ">=",
+          "threshold": {
+            "kind": "absolute",
+            "metric": "seats",
+            "value": 113
+          }
+        }
+      ]
     }
   ],
   "metadata": {
@@ -179,4 +215,3 @@
     ]
   }
 }
-
