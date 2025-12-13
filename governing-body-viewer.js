@@ -103,6 +103,9 @@ function renderGoverningBody(body, container) {
   // Keep track of selected group ids (coalition)
   const selectedIds = new Set();
 
+  // Single-select (but clearable) rule selection for console output
+  let selectedRuleId = null;
+
   function updateCoalitionSummary() {
     const coalitionGroups = groups.filter((g) => selectedIds.has(g.id));
 
@@ -140,15 +143,32 @@ function renderGoverningBody(body, container) {
     const results = evaluateRules(body, coalitionGroups);
     results.forEach((result) => {
       const li = document.createElement("li");
+      li.className = "rule-item";
       const symbol = result.satisfied ? "✔" : "✖";
       const name = result.rule.name || result.rule.id || "Rule";
       li.textContent = `${symbol} ${name}`;
+
+      if (result.rule && result.rule.id && result.rule.id === selectedRuleId) {
+        li.classList.add("selected");
+      }
+
+      // Click to select a rule; click again to deselect.
+      li.addEventListener("click", () => {
+        const id = result.rule && result.rule.id ? result.rule.id : null;
+        selectedRuleId = selectedRuleId === id ? null : id;
+        updateCoalitionSummary();
+      });
+
       rulesListEl.appendChild(li);
     });
 
-    const suggested = findMinimalWinningCoalitions(body, selectedIds, rules[0].id);
-
-    console.log("Suggested coalitions:", suggested.map(cs => cs.map(g => g.shortName || g.id)));
+    if (selectedRuleId) {
+      const suggested = findMinimalWinningCoalitions(body, selectedIds, selectedRuleId);
+      console.log(
+        "Suggested coalitions:",
+        suggested.map((cs) => cs.map((g) => g.shortName || g.id))
+      );
+    }
   }
 
   // Build group cards
