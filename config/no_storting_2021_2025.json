@@ -26,7 +26,7 @@
         "color": "#e6194b",
         "icon": {
           "type": "image",
-          "src": "icons/no_ap_logo.svg",
+          "src": "assets/icons/no_ap_logo.svg",
           "alt": "Arbeiderpartiet logo"
         }
       }
@@ -43,7 +43,7 @@
         "color": "#005aa3",
         "icon": {
           "type": "image",
-          "src": "icons/no_h_logo.svg",
+          "src": "assets/icons/no_h_logo.svg",
           "alt": "Høyres logo"
         }
       }
@@ -60,7 +60,7 @@
         "color": "#78be20",
         "icon": {
           "type": "image",
-          "src": "icons/no_sp_logo.png",
+          "src": "assets/icons/no_sp_logo.png",
           "alt": "Senterpartiets logo"
         }
       }
@@ -77,7 +77,7 @@
         "color": "#003f91",
         "icon": {
           "type": "image",
-          "src": "icons/no_frp_logo.svg",
+          "src": "assets/icons/no_frp_logo.svg",
           "alt": "Fremskrittspartiets logo"
         }
       }
@@ -94,7 +94,7 @@
         "color": "#ba0c2f",
         "icon": {
           "type": "image",
-          "src": "icons/no_sv_logo.svg",
+          "src": "assets/icons/no_sv_logo.svg",
           "alt": "Sosialistisk Venstreparti sin logo"
         }
       }
@@ -111,7 +111,7 @@
         "color": "#ff0000",
         "icon": {
           "type": "image",
-          "src": "icons/no_r_logo.svg",
+          "src": "assets/icons/no_r_logo.svg",
           "alt": "Rødt sin logo"
         }
       }
@@ -128,7 +128,7 @@
         "color": "#00a79d",
         "icon": {
           "type": "image",
-          "src": "icons/no_v_logo.svg",
+          "src": "assets/icons/no_v_logo.svg",
           "alt": "Venstres logo"
         }
       }
@@ -145,7 +145,7 @@
         "color": "#ffcc33",
         "icon": {
           "type": "image",
-          "src": "icons/no_krf_logo.svg",
+          "src": "assets/icons/no_krf_logo.svg",
           "alt": "Kristelig Folkeparti sin logo"
         }
       }
@@ -162,7 +162,7 @@
         "color": "#347102",
         "icon": {
           "type": "image",
-          "src": "icons/no_mdg_logo.svg",
+          "src": "assets/icons/no_mdg_logo.svg",
           "alt": "Miljøpartiet de Grønnes logo"
         }
       }
@@ -179,7 +179,7 @@
         "color": "#999999",
         "icon": {
           "type": "image",
-          "src": "icons/no_pf_logo.png",
+          "src": "assets/icons/no_pf_logo.png",
           "alt": "Pasientfokus logo"
         }
       }
