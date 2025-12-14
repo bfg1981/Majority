@@ -21,7 +21,7 @@ import { chromium } from "playwright";
 // Ephemeral same-origin base document for module imports (not checked in).
 const BLANK_NAME = ".cache-generator-blank.html";
 
-const ROOT = process.cwd();
+const ROOT = path.join(process.cwd(), "web");
 const CONFIG_DIR = path.join(ROOT, "config");
 const INDEX_PATH = path.join(CONFIG_DIR, "index.json");
 const MANIFEST_PATH = path.join(CONFIG_DIR, "manifest.json");
