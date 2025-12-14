@@ -1,0 +1,179 @@
+{
+  "id": "European Parliament",
+  "name": "European Parliament",
+  "period": "2024-2029",
+  "kind": "parliament",
+  "version": 1,
+  "metrics": {
+    "seats": {
+      "label": "Seats",
+      "unit": "seat",
+      "kind": "discrete",
+      "total": 719,
+      "isDefault": true
+    }
+  },
+  "groups": [
+    {
+      "id": "epp",
+      "name": "European People's Party",
+      "shortName": "EPP",
+      "kind": "group",
+      "metrics": {
+        "seats": 188
+      },
+      "metadata": {}
+    },
+    {
+      "id": "sd",
+      "name": "Progressive Alliance of Socialists and Democrats",
+      "shortName": "S&D",
+      "kind": "group",
+      "metrics": {
+        "seats": 136
+      },
+      "metadata": {}
+    },
+    {
+      "id": "pfe",
+      "name": "Patriots for Europe",
+      "shortName": "PfE",
+      "kind": "group",
+      "metrics": {
+        "seats": 84
+      },
+      "metadata": {}
+    },
+    {
+      "id": "ecr",
+      "name": "European Conservatives and Reformists",
+      "shortName": "ECR",
+      "kind": "group",
+      "metrics": {
+        "seats": 78
+      },
+      "metadata": {}
+    },
+    {
+      "id": "renew",
+      "name": "Renew Europe",
+      "shortName": "Renew",
+      "kind": "group",
+      "metrics": {
+        "seats": 77
+      },
+      "metadata": {}
+    },
+    {
+      "id": "greens_efa",
+      "name": "Greens/European Free Alliance",
+      "shortName": "Greens/EFA",
+      "kind": "group",
+      "metrics": {
+        "seats": 53
+      },
+      "metadata": {}
+    },
+    {
+      "id": "left",
+      "name": "The Left",
+      "shortName": "Left",
+      "kind": "group",
+      "metrics": {
+        "seats": 46
+      },
+      "metadata": {}
+    },
+    {
+      "id": "esn",
+      "name": "Europe of Sovereign Nations",
+      "shortName": "ESN",
+      "kind": "group",
+      "metrics": {
+        "seats": 25
+      },
+      "metadata": {}
+    },
+    {
+      "id": "ni",
+      "name": "Non-attached",
+      "shortName": "NI",
+      "kind": "group",
+      "metrics": {
+        "seats": 32
+      },
+      "metadata": {}
+    }
+  ],
+  "rules": [
+    {
+      "id": "majority",
+      "name": "Absolute majority of component Members",
+      "description": "At least 360 of 719 (all Members present).",
+      "scope": "plenary",
+      "conditions": [
+        {
+          "type": "sum",
+          "metric": "seats",
+          "operator": ">=",
+          "threshold": {
+            "kind": "absolute",
+            "metric": "seats",
+            "value": 360
+          }
+        }
+      ]
+    },
+    {
+      "id": "three_fifths",
+      "name": "Three-fifths majority",
+      "description": "At least 432 of 719 (all Members present).",
+      "scope": "plenary",
+      "conditions": [
+        {
+          "type": "sum",
+          "metric": "seats",
+          "operator": ">=",
+          "threshold": {
+            "kind": "absolute",
+            "metric": "seats",
+            "value": 432
+          }
+        }
+      ]
+    },
+    {
+      "id": "two_thirds",
+      "name": "Two-thirds majority",
+      "description": "At least 480 of 719 (all Members present).",
+      "scope": "plenary",
+      "conditions": [
+        {
+          "type": "sum",
+          "metric": "seats",
+          "operator": ">=",
+          "threshold": {
+            "kind": "absolute",
+            "metric": "seats",
+            "value": 480
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "region": "EU",
+    "period": "2024-2029",
+    "sources": [
+      {
+        "title": "EPRS (European Parliament Think Tank) - Size of political groups in the European Parliament (infographic, 18 Jul 2024)",
+        "url": "https://www.europarl.europa.eu/thinktank/en/document/EPRS_ATA%282024%29762357"
+      },
+      {
+        "title": "European Parliament Rules of Procedure (16 Jul 2024)",
+        "url": "https://www.europarl.europa.eu/rules/rules20240716/Rules20240716_EN.pdf"
+      }
+    ],
+    "notes": "Seat totals reflect filled seats shown in the cited sources (719). Majority thresholds are computed under the assumption that all Members are present."
+  }
+}
