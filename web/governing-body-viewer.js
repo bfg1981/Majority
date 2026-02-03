@@ -4,6 +4,21 @@
  * @param {string} jsonPath - relative path to the JSON file
  * @param {string} elementId - id of the DOM element to render into
  */
+
+const CONFIG = {
+  coalitionDisplayDelayMs: {
+    value: 1000,
+    min: 0,
+    step: 100,
+    label: "Coalition display delay (ms)",
+    get() {
+      const raw = this.value;
+      const n = typeof raw === "number" && Number.isFinite(raw) ? raw : 1000;
+      return Math.max(0, n);
+    },
+  },
+};
+
 function loadGoverningBody(jsonPath, elementId) {
   const container = document.getElementById(elementId);
   if (!container) {
@@ -105,8 +120,6 @@ function renderGoverningBody(body, container) {
 
   // Single-select (but clearable) rule selection for console output
   let selectedRuleId = null;
-
-  const COALITION_DISPLAY_DELAY = 1000;
   let displayTimer = null;
   let displayRunToken = 0;
 
@@ -150,7 +163,7 @@ function renderGoverningBody(body, container) {
 
       index += 1;
       if (index < coalitions.length) {
-        displayTimer = setTimeout(step, COALITION_DISPLAY_DELAY);
+        displayTimer = setTimeout(step, CONFIG.coalitionDisplayDelayMs.get());
         return;
       }
 
@@ -159,7 +172,7 @@ function renderGoverningBody(body, container) {
         if (myToken !== displayRunToken) return;
         clearSuggestedHighlights();
         displayTimer = null;
-      }, COALITION_DISPLAY_DELAY);
+      }, CONFIG.coalitionDisplayDelayMs.get());
     };
 
     step();
