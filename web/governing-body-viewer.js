@@ -19,6 +19,9 @@ const CONFIG = {
   },
 };
 
+// Expose config for UI introspection (single-renderer app; safe global).
+window.GB_CONFIG = CONFIG;
+
 function loadGoverningBody(jsonPath, elementId) {
   const container = document.getElementById(elementId);
   if (!container) {

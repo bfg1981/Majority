@@ -131,3 +131,95 @@ h1 {
 .group-item.suggested:not(.selected) {
   background: #fef9c3;
 }
+
+
+/* Settings gear + panel */
+.gb-gear {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.gb-gear:hover {
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+}
+
+.gb-settings {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  margin-top: 48px;
+  width: 320px;
+  max-width: calc(100vw - 2rem);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.gb-settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.gb-settings-title {
+  font-weight: 600;
+}
+
+.gb-settings-close {
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.5rem;
+}
+
+.gb-settings-close:hover {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+.gb-settings-body {
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.gb-setting-row {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gb-setting-label {
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.gb-setting-input {
+  width: 100%;
+  padding: 0.35rem 0.45rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
