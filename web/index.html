@@ -165,6 +165,24 @@ possible ways to complete the rule.</p>
       });
     });
 
+    window.DEPLOYMENT_VERSION = null;
+    fetch("/deployment-version.json", {
+      headers: { Accept: "application/json,*/*;q=0.8" },
+    })
+      .then((res) => {
+        if (!res.ok) return null;
+        return res.json();
+      })
+      .then((data) =>
+        data && typeof data.version === "string" && data.version
+          ? data.version
+          : null
+      )
+      .catch(() => null)
+      .then((version) => {
+        window.DEPLOYMENT_VERSION = version;
+      });
+
     Promise.all([domReady, manifestReady]).then(([, manifest]) => {
       setupSettingsUI();
       const ids = Object.keys(manifest).sort((a, b) => {
