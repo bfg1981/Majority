@@ -39,6 +39,10 @@ possible ways to complete the rule.</p>
     const idSelect = document.getElementById("governing-body-id");
     const periodSelect = document.getElementById("governing-body-period");
     const outputId = "governing-body-output";
+    const storageKeys = {
+      governingBodyId: "majority.governingBodyId",
+      governingBodyPeriod: "majority.governingBodyPeriod",
+    };
 
     // Settings UI (introspected from window.GB_CONFIG, defined in governing-body-viewer.js)
     const gearBtn = document.getElementById("gb-settings-gear");
@@ -150,6 +154,22 @@ possible ways to complete the rule.</p>
       });
     }
 
+    function readStoredValue(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    }
+
+    function writeStoredValue(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch {
+        // Ignore storage errors; selection persistence is optional.
+      }
+    }
+
 
     const domReady = new Promise((resolve) => {
       if (document.readyState === "loading") {
@@ -205,8 +225,16 @@ possible ways to complete the rule.</p>
       //Disable if only one id
       idSelect.disabled = ids.length <= 1;
 
-      let currentId = ids[0];
-      let currentPeriod = null;
+      const storedId = readStoredValue(storageKeys.governingBodyId);
+      const storedPeriod = readStoredValue(storageKeys.governingBodyPeriod);
+      let currentId = storedId && ids.includes(storedId) ? storedId : ids[0];
+      let currentPeriod = storedPeriod;
+      idSelect.value = currentId;
+
+      function storeCurrentSelection() {
+        if (currentId) writeStoredValue(storageKeys.governingBodyId, currentId);
+        if (currentPeriod) writeStoredValue(storageKeys.governingBodyPeriod, currentPeriod);
+      }
 
       function populatePeriods(preservePeriod = true) {
         const periods = Object.keys(manifest[currentId] || {});
@@ -239,7 +267,8 @@ possible ways to complete the rule.</p>
       }
 
       // Initial population + load
-      populatePeriods(false);
+      populatePeriods(true);
+      storeCurrentSelection();
       loadCurrent();
 
       idSelect.addEventListener("change", () => {
@@ -247,11 +276,13 @@ possible ways to complete the rule.</p>
         currentId = idSelect.value;
         currentPeriod = previousPeriod;
         populatePeriods(true);
+        storeCurrentSelection();
         loadCurrent();
       });
 
       periodSelect.addEventListener("change", () => {
         currentPeriod = periodSelect.value;
+        storeCurrentSelection();
         loadCurrent();
       });
     });
