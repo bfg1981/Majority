@@ -1,0 +1,547 @@
+{
+  "id": "X-Council of the European Union (mock)",
+  "name": "Council of the European Union - provisional dataset",
+  "period": "2024",
+  "kind": "council",
+  "version": 1,
+  "ingress": "This Council dataset is intended to model the voting rules seriously, including blocking minorities and population thresholds. Country labels are deliberately informal and the population values are rounded, so this should not be treated as verified source-quality Council data yet.",
+  "metrics": {
+    "populationMillion": {
+      "label": "Population",
+      "unit": "million people",
+      "kind": "continuous",
+      "total": 448.9,
+      "isDefault": true
+    },
+    "countries": {
+      "label": "Member states",
+      "unit": "state",
+      "kind": "discrete",
+      "total": 27
+    }
+  },
+  "groups": [
+    {
+      "id": "de",
+      "name": "Läderhosen-land",
+      "shortName": "DE",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 83.4,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "DE",
+        "mockName": true,
+        "color": "#111111"
+      }
+    },
+    {
+      "id": "fr",
+      "name": "Baguette-and-Forms-land",
+      "shortName": "FR",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 68.4,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "FR",
+        "mockName": true,
+        "color": "#0055a4"
+      }
+    },
+    {
+      "id": "it",
+      "name": "Pasta-Boot-land",
+      "shortName": "IT",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 58.9,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "IT",
+        "mockName": true,
+        "color": "#008c45"
+      }
+    },
+    {
+      "id": "es",
+      "name": "Tapas-and-Sun-land",
+      "shortName": "ES",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 48.6,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "ES",
+        "mockName": true,
+        "color": "#aa151b"
+      }
+    },
+    {
+      "id": "pl",
+      "name": "Pierogi-Plain-land",
+      "shortName": "PL",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 36.8,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "PL",
+        "mockName": true,
+        "color": "#dc143c"
+      }
+    },
+    {
+      "id": "ro",
+      "name": "Carpathian-Plot-Twist-land",
+      "shortName": "RO",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 19.1,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "RO",
+        "mockName": true,
+        "color": "#002b7f"
+      }
+    },
+    {
+      "id": "nl",
+      "name": "Bicycle-Delta-land",
+      "shortName": "NL",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 17.9,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "NL",
+        "mockName": true,
+        "color": "#ff7f00"
+      }
+    },
+    {
+      "id": "be",
+      "name": "Waffle-Committee-land",
+      "shortName": "BE",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 11.8,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "BE",
+        "mockName": true,
+        "color": "#fdda24"
+      }
+    },
+    {
+      "id": "cz",
+      "name": "Castle-and-Pilsner-land",
+      "shortName": "CZ",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 10.9,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "CZ",
+        "mockName": true,
+        "color": "#d7141a"
+      }
+    },
+    {
+      "id": "se",
+      "name": "Meatball-land",
+      "shortName": "SE",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 10.6,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "SE",
+        "mockName": true,
+        "color": "#006aa7"
+      }
+    },
+    {
+      "id": "pt",
+      "name": "Cork-and-Custard-land",
+      "shortName": "PT",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 10.5,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "PT",
+        "mockName": true,
+        "color": "#006600"
+      }
+    },
+    {
+      "id": "gr",
+      "name": "Olive-Column-land",
+      "shortName": "GR",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 10.4,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "GR",
+        "mockName": true,
+        "color": "#0d5eaf"
+      }
+    },
+    {
+      "id": "hu",
+      "name": "Paprika-Plain-land",
+      "shortName": "HU",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 9.6,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "HU",
+        "mockName": true,
+        "color": "#477050"
+      }
+    },
+    {
+      "id": "at",
+      "name": "Waltz-and-Mountain-land",
+      "shortName": "AT",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 9.1,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "AT",
+        "mockName": true,
+        "color": "#ed2939"
+      }
+    },
+    {
+      "id": "bg",
+      "name": "Yogurt-Rose-land",
+      "shortName": "BG",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 6.4,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "BG",
+        "mockName": true,
+        "color": "#00966e"
+      }
+    },
+    {
+      "id": "dk",
+      "name": "Hygge-Archipelago-land",
+      "shortName": "DK",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 5.9,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "DK",
+        "mockName": true,
+        "color": "#c60c30"
+      }
+    },
+    {
+      "id": "fi",
+      "name": "Sauna-Forest-land",
+      "shortName": "FI",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 5.6,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "FI",
+        "mockName": true,
+        "color": "#002f6c"
+      }
+    },
+    {
+      "id": "sk",
+      "name": "Tatra-Shortcut-land",
+      "shortName": "SK",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 5.4,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "SK",
+        "mockName": true,
+        "color": "#0b4ea2"
+      }
+    },
+    {
+      "id": "ie",
+      "name": "Rainy-Harp-land",
+      "shortName": "IE",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 5.3,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "IE",
+        "mockName": true,
+        "color": "#169b62"
+      }
+    },
+    {
+      "id": "hr",
+      "name": "Checkerboard-Coast-land",
+      "shortName": "HR",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 3.9,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "HR",
+        "mockName": true,
+        "color": "#171796"
+      }
+    },
+    {
+      "id": "lt",
+      "name": "Amber-Basketball-land",
+      "shortName": "LT",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 2.9,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "LT",
+        "mockName": true,
+        "color": "#fdb913"
+      }
+    },
+    {
+      "id": "si",
+      "name": "Alpine-Postcard-land",
+      "shortName": "SI",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 2.1,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "SI",
+        "mockName": true,
+        "color": "#005da4"
+      }
+    },
+    {
+      "id": "lv",
+      "name": "Riga-Balsam-land",
+      "shortName": "LV",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 1.9,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "LV",
+        "mockName": true,
+        "color": "#9e3039"
+      }
+    },
+    {
+      "id": "ee",
+      "name": "Digital-Bog-land",
+      "shortName": "EE",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 1.4,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "EE",
+        "mockName": true,
+        "color": "#0072ce"
+      }
+    },
+    {
+      "id": "cy",
+      "name": "Halloumi-Island-land",
+      "shortName": "CY",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 0.9,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "CY",
+        "mockName": true,
+        "color": "#d57800"
+      }
+    },
+    {
+      "id": "lu",
+      "name": "Tiny-Bank-Queue-land",
+      "shortName": "LU",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 0.7,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "LU",
+        "mockName": true,
+        "color": "#00a1de"
+      }
+    },
+    {
+      "id": "mt",
+      "name": "Micro-Fortress-land",
+      "shortName": "MT",
+      "kind": "member_state",
+      "metrics": {
+        "populationMillion": 0.5,
+        "countries": 1
+      },
+      "metadata": {
+        "realCountryCode": "MT",
+        "mockName": true,
+        "color": "#cf142b"
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "simple_majority",
+      "name": "Simple majority (14 states)",
+      "description": "Council simple majority: at least 14 of 27 member states vote in favour.",
+      "scope": "council",
+      "conditions": [
+        {
+          "type": "countGroups",
+          "operator": ">=",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "id": "qualified_majority",
+      "name": "Qualified majority (15 states and 65% population)",
+      "description": "Mock model of Council qualified majority: at least 15 of 27 member states and at least 65% of the EU population.",
+      "scope": "council",
+      "conditions": [
+        {
+          "type": "countGroups",
+          "operator": ">=",
+          "value": 15
+        },
+        {
+          "type": "sum",
+          "metric": "populationMillion",
+          "operator": ">=",
+          "threshold": {
+            "kind": "fractionOfTotal",
+            "metric": "populationMillion",
+            "value": 0.65
+          }
+        }
+      ]
+    },
+    {
+      "id": "reinforced_qualified_majority",
+      "name": "Reinforced qualified majority (20 states and 65% population)",
+      "description": "Council reinforced qualified majority: used when the proposal is not from the Commission or the High Representative; at least 72% of member states and at least 65% of the EU population.",
+      "scope": "council",
+      "conditions": [
+        {
+          "type": "countGroups",
+          "operator": ">=",
+          "value": 20
+        },
+        {
+          "type": "sum",
+          "metric": "populationMillion",
+          "operator": ">=",
+          "threshold": {
+            "kind": "fractionOfTotal",
+            "metric": "populationMillion",
+            "value": 0.65
+          }
+        }
+      ]
+    },
+    {
+      "id": "blocking_minority",
+      "name": "Blocking minority (4 states and >35% population)",
+      "description": "Mock model of a Council blocking minority: at least four member states representing more than 35% of the EU population.",
+      "scope": "council",
+      "conditions": [
+        {
+          "type": "countGroups",
+          "operator": ">=",
+          "value": 4
+        },
+        {
+          "type": "sum",
+          "metric": "populationMillion",
+          "operator": ">",
+          "threshold": {
+            "kind": "fractionOfTotal",
+            "metric": "populationMillion",
+            "value": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "id": "unanimity",
+      "name": "Unanimity (27 states)",
+      "description": "Council unanimity modelled as all 27 member states voting in favour. This mock does not model abstentions.",
+      "scope": "council",
+      "conditions": [
+        {
+          "type": "countGroups",
+          "operator": ">=",
+          "value": 27
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "region": "EU",
+    "period": "2024",
+    "mock": true,
+    "notes": "Deliberately unserious member-state names and rounded population values. This is intended as a modelling sketch for Council voting behavior, not as source-quality EU Council data. Special voting cases where only some member states participate are not modelled here.",
+    "sources": [
+      {
+        "title": "Council of the EU - How does the Council vote?",
+        "url": "https://www.consilium.europa.eu/en/council-eu/how-does-the-council-vote/"
+      },
+      {
+        "title": "Council of the EU - Qualified majority",
+        "url": "https://www.consilium.europa.eu/en/council-eu/voting-system/qualified-majority/"
+      },
+      {
+        "title": "Council of the EU - Simple majority",
+        "url": "https://www.consilium.europa.eu/en/council-eu/how-does-the-council-vote/simple-majority/"
+      }
+    ]
+  }
+}
