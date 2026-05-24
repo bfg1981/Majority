@@ -170,13 +170,27 @@ const domReady = new Promise((resolve) => {
   }
 });
 
-const manifestReady = new Promise((resolve) => {
-  getManifest((manifest) => {
-    resolve(manifest);
-  });
-});
-
 window.DEPLOYMENT_VERSION = null;
+window.DEV_MODE = false;
+
+function normalizeDeploymentInfo(data) {
+  const version =
+    data && typeof data.version === "string" && data.version
+      ? data.version
+      : null;
+  return {
+    version,
+    devMode: Boolean(data && data.devMode),
+  };
+}
+
+function withDevCacheBust(url, deploymentInfo) {
+  if (!deploymentInfo.devMode || !deploymentInfo.version) return url;
+  const u = new URL(url, window.location.href);
+  u.searchParams.set("dev", deploymentInfo.version);
+  return u.pathname + u.search + u.hash;
+}
+
 const deploymentVersionReady = fetch("/deployment-version.json", {
   headers: { Accept: "application/json,*/*;q=0.8" },
 })
@@ -184,20 +198,37 @@ const deploymentVersionReady = fetch("/deployment-version.json", {
     if (!res.ok) return null;
     return res.json();
   })
-  .then((data) =>
-    data && typeof data.version === "string" && data.version
-      ? data.version
-      : null
-  )
-  .catch(() => null)
-  .then((version) => {
-    window.DEPLOYMENT_VERSION = version;
-    return version;
+  .then(normalizeDeploymentInfo)
+  .catch(() => normalizeDeploymentInfo(null))
+  .then((deploymentInfo) => {
+    window.DEPLOYMENT_VERSION = deploymentInfo.version;
+    window.DEV_MODE = deploymentInfo.devMode;
+    return deploymentInfo;
   });
 
-Promise.all([domReady, manifestReady, deploymentVersionReady]).then(([, manifest, deploymentVersion]) => {
+function loadManifest(deploymentInfo) {
+  return new Promise((resolve) => {
+    getManifest(resolve, {
+      cachedManifestUrl: withDevCacheBust("/config/manifest.json", deploymentInfo),
+      mapConfigUrl: (url) => withDevCacheBust(url, deploymentInfo),
+      slowOptions: {
+        discoveryOptions: {
+          manifestUrl: withDevCacheBust("/config/index.json", deploymentInfo),
+          autoindexUrl: withDevCacheBust("/config/", deploymentInfo),
+        },
+      },
+    });
+  });
+}
+
+const manifestReady = deploymentVersionReady
+  .then(loadManifest)
+  .catch(() => null)
+  .then((manifest) => manifest || {});
+
+Promise.all([domReady, manifestReady, deploymentVersionReady]).then(([, manifest, deploymentInfo]) => {
   setupSettingsUI();
-  invalidateStoredSelectionIfVersionChanged(deploymentVersion);
+  invalidateStoredSelectionIfVersionChanged(deploymentInfo.version);
   const ids = Object.keys(manifest).sort((a, b) => {
     const aIsMock = a.startsWith("X-");
     const bIsMock = b.startsWith("X-");
@@ -255,7 +286,7 @@ Promise.all([domReady, manifestReady, deploymentVersionReady]).then(([, manifest
     if (!currentId || !currentPeriod) return;
     const file = manifest[currentId][currentPeriod];
     if (file) {
-      loadGoverningBody(file, outputId);
+      loadGoverningBody(withDevCacheBust(file, deploymentInfo), outputId);
     }
   }
 

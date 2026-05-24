@@ -72,6 +72,11 @@ function getDeploymentVersion() {
   return null;
 }
 
+function getDevMode() {
+  const raw = process.env.DEV_MODE;
+  return raw === "1" || raw === "true" || raw === "TRUE" || raw === "yes";
+}
+
 function writeDeploymentVersionFile() {
   const version = getDeploymentVersion();
   if (!version) {
@@ -81,7 +86,7 @@ function writeDeploymentVersionFile() {
 
   fs.writeFileSync(
     DEPLOYMENT_VERSION_PATH,
-    JSON.stringify({ version }, null, 2) + "\n",
+    JSON.stringify({ version, devMode: getDevMode() }, null, 2) + "\n",
     "utf8"
   );
   verifyJsonFile(DEPLOYMENT_VERSION_PATH, "object");

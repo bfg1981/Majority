@@ -8,7 +8,7 @@ docker rm -f "${tmp_container}" >/dev/null 2>&1 || true
 docker image build -f deploy/docker/Dockerfile --target generator -t majority:generator .
 
 if [[ -n "${deployment_version}" ]]; then
-  docker create --name "${tmp_container}" -e "DEPLOYMENT_VERSION=${deployment_version}" majority:generator npm run generate:cache >/dev/null
+  docker create --name "${tmp_container}" -e "DEPLOYMENT_VERSION=${deployment_version}" -e DEV_MODE=true majority:generator npm run generate:cache >/dev/null
 else
   docker create --name "${tmp_container}" majority:generator npm run generate:cache >/dev/null
 fi

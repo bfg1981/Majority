@@ -18,11 +18,14 @@ import { getConfigIndex } from "./config-discovery.js";
  * @param {string} [options.cachedManifestUrl="/config/manifest.json"]
  * @param {Object} [options.slowOptions]
  *        Options forwarded to getManifestSlow (e.g. discoveryOptions).
+ * @param {(url: string) => string} [options.mapConfigUrl]
+ *        Optional transform applied when loading config JSON files.
  */
 export async function getManifest(onDone, options = {}) {
   const {
     cachedManifestUrl = "/config/manifest.json",
     slowOptions = {},
+    mapConfigUrl,
   } = options;
 
   // 1) Fast path: cached manifest (deployment artifact)
@@ -56,7 +59,7 @@ export async function getManifest(onDone, options = {}) {
   return getManifestSlow((entries) => {
     const manifest = createManifest(entries);
     onDone(manifest);
-  }, slowOptions);
+  }, { ...slowOptions, mapConfigUrl });
 }
 
 /**
@@ -68,9 +71,11 @@ export async function getManifest(onDone, options = {}) {
  * @param {Object} [options]
  * @param {Object} [options.discoveryOptions]
  *        Options passed through to getConfigIndex (e.g. manifestUrl/autoindexUrl).
+ * @param {(url: string) => string} [options.mapConfigUrl]
+ *        Optional transform applied when loading config JSON files.
  */
 export async function getManifestSlow(onDone, options = {}) {
-  const { discoveryOptions = {} } = options;
+  const { discoveryOptions = {}, mapConfigUrl = (url) => url } = options;
 
   // 1) Discover available config files (using config-discovery)
   const entries = await getConfigIndex(discoveryOptions);
@@ -84,7 +89,7 @@ export async function getManifestSlow(onDone, options = {}) {
   // 2) Fetch all configs in parallel
   const results = await Promise.allSettled(
     entries.map(async (entry) => {
-      const res = await fetch(entry.file, {
+      const res = await fetch(mapConfigUrl(entry.file), {
         headers: { Accept: "application/json,*/*;q=0.8" },
       });
       if (!res.ok) {
