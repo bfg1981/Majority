@@ -42,6 +42,7 @@ possible ways to complete the rule.</p>
     const storageKeys = {
       governingBodyId: "majority.governingBodyId",
       governingBodyPeriod: "majority.governingBodyPeriod",
+      deploymentVersion: "majority.deploymentVersion",
     };
 
     // Settings UI (introspected from window.GB_CONFIG, defined in governing-body-viewer.js)
@@ -170,6 +171,33 @@ possible ways to complete the rule.</p>
       }
     }
 
+    function removeStoredValue(key) {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        // Ignore storage errors; selection persistence is optional.
+      }
+    }
+
+    function invalidateStoredSelectionIfVersionChanged(deploymentVersion) {
+      const currentVersion =
+        typeof deploymentVersion === "string" && deploymentVersion
+          ? deploymentVersion
+          : null;
+      const storedVersion = readStoredValue(storageKeys.deploymentVersion);
+
+      if (storedVersion !== currentVersion) {
+        removeStoredValue(storageKeys.governingBodyId);
+        removeStoredValue(storageKeys.governingBodyPeriod);
+      }
+
+      if (currentVersion) {
+        writeStoredValue(storageKeys.deploymentVersion, currentVersion);
+      } else {
+        removeStoredValue(storageKeys.deploymentVersion);
+      }
+    }
+
 
     const domReady = new Promise((resolve) => {
       if (document.readyState === "loading") {
@@ -186,7 +214,7 @@ possible ways to complete the rule.</p>
     });
 
     window.DEPLOYMENT_VERSION = null;
-    fetch("/deployment-version.json", {
+    const deploymentVersionReady = fetch("/deployment-version.json", {
       headers: { Accept: "application/json,*/*;q=0.8" },
     })
       .then((res) => {
@@ -201,10 +229,12 @@ possible ways to complete the rule.</p>
       .catch(() => null)
       .then((version) => {
         window.DEPLOYMENT_VERSION = version;
+        return version;
       });
 
-    Promise.all([domReady, manifestReady]).then(([, manifest]) => {
+    Promise.all([domReady, manifestReady, deploymentVersionReady]).then(([, manifest, deploymentVersion]) => {
       setupSettingsUI();
+      invalidateStoredSelectionIfVersionChanged(deploymentVersion);
       const ids = Object.keys(manifest).sort((a, b) => {
         const aIsMock = a.startsWith("X-");
         const bIsMock = b.startsWith("X-");
