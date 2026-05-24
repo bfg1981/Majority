@@ -93,6 +93,19 @@ function renderGoverningBody(body, container) {
   meta.textContent = metricPhrase + period + country;
   header.appendChild(meta);
 
+  const ingressText =
+    typeof body.ingress === "string"
+      ? body.ingress
+      : body.metadata && typeof body.metadata.ingress === "string"
+        ? body.metadata.ingress
+        : "";
+  if (ingressText.trim()) {
+    const ingress = document.createElement("p");
+    ingress.className = "gb-header-ingress";
+    ingress.textContent = ingressText;
+    header.appendChild(ingress);
+  }
+
   container.appendChild(header);
 
   // Coalition summary

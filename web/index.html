@@ -167,7 +167,12 @@ possible ways to complete the rule.</p>
 
     Promise.all([domReady, manifestReady]).then(([, manifest]) => {
       setupSettingsUI();
-      const ids = Object.keys(manifest);
+      const ids = Object.keys(manifest).sort((a, b) => {
+        const aIsMock = a.startsWith("X-");
+        const bIsMock = b.startsWith("X-");
+        if (aIsMock !== bIsMock) return aIsMock ? 1 : -1;
+        return a.localeCompare(b);
+      });
       if (ids.length === 0) return;
 
       // Populate ID dropdown

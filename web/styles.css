@@ -34,6 +34,14 @@ h1 {
   color: #4b5563;
 }
 
+.gb-header-ingress {
+  margin: 0.65rem 0 0 0;
+  max-width: 72ch;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: #374151;
+}
+
 
 /* Wider minimum card width and full-width on small screens */
 .group-list {
