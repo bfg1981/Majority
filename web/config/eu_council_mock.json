@@ -23,7 +23,7 @@
   "groups": [
     {
       "id": "de",
-      "name": "Läderhosen-land",
+      "name": "Läderhosen-and-Spreadsheet-land",
       "shortName": "DE",
       "kind": "member_state",
       "metrics": {
@@ -158,7 +158,7 @@
     },
     {
       "id": "se",
-      "name": "Meatball-land",
+      "name": "Meatball-and-Flatpack-land",
       "shortName": "SE",
       "kind": "member_state",
       "metrics": {
