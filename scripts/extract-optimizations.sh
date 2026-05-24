@@ -11,3 +11,4 @@ trap 'docker rm -f "${tmp_container}" >/dev/null 2>&1 || true' EXIT
 
 docker cp "${tmp_container}:/app/web/config/index.json" web/config/index.json
 docker cp "${tmp_container}:/app/web/config/manifest.json" web/config/manifest.json
+docker cp "${tmp_container}:/app/web/deployment-version.json" web/deployment-version.json >/dev/null 2>&1 || true

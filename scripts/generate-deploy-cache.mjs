@@ -3,6 +3,7 @@
   Deployment cache generator.
 
   Generates:
+    - deployment-version.json (git/deployment version metadata)
     - config/index.json    (discovery index, used when no directory listing exists)
     - config/manifest.json (full manifest cache)
 
@@ -23,6 +24,7 @@ const BLANK_NAME = ".cache-generator-blank.html";
 
 const ROOT = path.join(process.cwd(), "web");
 const CONFIG_DIR = path.join(ROOT, "config");
+const DEPLOYMENT_VERSION_PATH = path.join(ROOT, "deployment-version.json");
 const INDEX_PATH = path.join(CONFIG_DIR, "index.json");
 const MANIFEST_PATH = path.join(CONFIG_DIR, "manifest.json");
 const BLANK_PATH = path.join(ROOT, BLANK_NAME);
@@ -47,6 +49,43 @@ function pickPython() {
   if (existsOnPath("python3")) return "python3";
   if (existsOnPath("python")) return "python";
   return null;
+}
+
+function getDeploymentVersion() {
+  if (process.env.DEPLOYMENT_VERSION) {
+    return process.env.DEPLOYMENT_VERSION.trim();
+  }
+
+  const res = spawnSync("git", ["rev-parse", "--short", "HEAD"], {
+    cwd: process.cwd(),
+    encoding: "utf8",
+  });
+
+  if (res.status === 0 && res.stdout.trim()) {
+    return res.stdout.trim();
+  }
+
+  console.warn(
+    "[generate-cache] Could not determine deployment version; " +
+      "skipping deployment-version.json. Run from a git checkout or set DEPLOYMENT_VERSION."
+  );
+  return null;
+}
+
+function writeDeploymentVersionFile() {
+  const version = getDeploymentVersion();
+  if (!version) {
+    fs.rmSync(DEPLOYMENT_VERSION_PATH, { force: true });
+    return;
+  }
+
+  fs.writeFileSync(
+    DEPLOYMENT_VERSION_PATH,
+    JSON.stringify({ version }, null, 2) + "\n",
+    "utf8"
+  );
+  verifyJsonFile(DEPLOYMENT_VERSION_PATH, "object");
+  console.log(`[generate-cache] Wrote ${path.relative(ROOT, DEPLOYMENT_VERSION_PATH)} (${version})`);
 }
 
 function verifyJsonFile(filePath, shape) {
@@ -134,6 +173,7 @@ async function main() {
     fail(`[generate-cache] Missing config directory: ${CONFIG_DIR}`);
   }
   ensureBlankHtmlExists();
+  writeDeploymentVersionFile();
 
   const python = pickPython();
   if (!python) {
