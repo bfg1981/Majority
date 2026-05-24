@@ -30,8 +30,52 @@ possible ways to complete the rule.</p>
 
   <div id="governing-body-output"></div>
 
-  <script src="governing-body-viewer.js"></script>
-  <script type="module" src="app.js"></script>
+  <script>
+    (async () => {
+      function normalizeDeploymentInfo(data) {
+        const version =
+          data && typeof data.version === "string" && data.version
+            ? data.version
+            : null;
+        return {
+          version,
+          devMode: Boolean(data && data.devMode),
+        };
+      }
+
+      function withDevCacheBust(url, deploymentInfo) {
+        if (!deploymentInfo.devMode || !deploymentInfo.version) return url;
+        const u = new URL(url, window.location.href);
+        u.searchParams.set("dev", deploymentInfo.version);
+        return u.pathname + u.search + u.hash;
+      }
+
+      function loadScript(src, deploymentInfo, options = {}) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          if (options.type) script.type = options.type;
+          script.src = withDevCacheBust(src, deploymentInfo);
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+      }
+
+      const deploymentInfo = await fetch("/deployment-version.json", {
+        headers: { Accept: "application/json,*/*;q=0.8" },
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then(normalizeDeploymentInfo)
+        .catch(() => normalizeDeploymentInfo(null));
+
+      window.DEPLOYMENT_VERSION = deploymentInfo.version;
+      window.DEV_MODE = deploymentInfo.devMode;
+      window.GB_DEPLOYMENT_INFO = deploymentInfo;
+
+      await loadScript("governing-body-viewer.js", deploymentInfo);
+      await loadScript("app.js", deploymentInfo, { type: "module" });
+    })();
+  </script>
 
 </body>
 </html>

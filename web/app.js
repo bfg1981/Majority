@@ -170,20 +170,6 @@ const domReady = new Promise((resolve) => {
   }
 });
 
-window.DEPLOYMENT_VERSION = null;
-window.DEV_MODE = false;
-
-function normalizeDeploymentInfo(data) {
-  const version =
-    data && typeof data.version === "string" && data.version
-      ? data.version
-      : null;
-  return {
-    version,
-    devMode: Boolean(data && data.devMode),
-  };
-}
-
 function withDevCacheBust(url, deploymentInfo) {
   if (!deploymentInfo.devMode || !deploymentInfo.version) return url;
   const u = new URL(url, window.location.href);
@@ -191,20 +177,10 @@ function withDevCacheBust(url, deploymentInfo) {
   return u.pathname + u.search + u.hash;
 }
 
-const deploymentVersionReady = fetch("/deployment-version.json", {
-  headers: { Accept: "application/json,*/*;q=0.8" },
-})
-  .then((res) => {
-    if (!res.ok) return null;
-    return res.json();
-  })
-  .then(normalizeDeploymentInfo)
-  .catch(() => normalizeDeploymentInfo(null))
-  .then((deploymentInfo) => {
-    window.DEPLOYMENT_VERSION = deploymentInfo.version;
-    window.DEV_MODE = deploymentInfo.devMode;
-    return deploymentInfo;
-  });
+const deploymentInfo = window.GB_DEPLOYMENT_INFO || {
+  version: window.DEPLOYMENT_VERSION || null,
+  devMode: Boolean(window.DEV_MODE),
+};
 
 function loadManifest(deploymentInfo) {
   return new Promise((resolve) => {
@@ -221,12 +197,11 @@ function loadManifest(deploymentInfo) {
   });
 }
 
-const manifestReady = deploymentVersionReady
-  .then(loadManifest)
+const manifestReady = loadManifest(deploymentInfo)
   .catch(() => null)
   .then((manifest) => manifest || {});
 
-Promise.all([domReady, manifestReady, deploymentVersionReady]).then(([, manifest, deploymentInfo]) => {
+Promise.all([domReady, manifestReady]).then(([, manifest]) => {
   setupSettingsUI();
   invalidateStoredSelectionIfVersionChanged(deploymentInfo.version);
   const ids = Object.keys(manifest).sort((a, b) => {
