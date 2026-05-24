@@ -9,12 +9,15 @@ docker image build -f deploy/docker/Dockerfile --target generator -t majority:ge
 
 if [[ -n "${deployment_version}" ]]; then
   docker create --name "${tmp_container}" -e "DEPLOYMENT_VERSION=${deployment_version}" majority:generator npm run generate:cache >/dev/null
-  docker start -a "${tmp_container}" >/dev/null
 else
-  docker create --name "${tmp_container}" majority:generator >/dev/null
+  docker create --name "${tmp_container}" majority:generator npm run generate:cache >/dev/null
 fi
 trap 'docker rm -f "${tmp_container}" >/dev/null 2>&1 || true' EXIT
 
+docker start -a "${tmp_container}"
+
 docker cp "${tmp_container}:/app/web/config/index.json" web/config/index.json
 docker cp "${tmp_container}:/app/web/config/manifest.json" web/config/manifest.json
-docker cp "${tmp_container}:/app/web/deployment-version.json" web/deployment-version.json >/dev/null 2>&1 || true
+if ! docker cp "${tmp_container}:/app/web/deployment-version.json" web/deployment-version.json >/dev/null 2>&1; then
+  rm -f web/deployment-version.json
+fi
